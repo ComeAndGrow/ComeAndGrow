@@ -33,12 +33,52 @@ async function createUserTable() {
     `;
 
     console.log("Users table created or already exists:", userTable);
-    
+
+}
+
+async function createConfigTable() {
+
+    // Gotta Encrypt the Passwords Later // TODO
+    // Create users table if it does not exist
+    const configTable = await sql`
+        CREATE TABLE IF NOT EXISTS config (
+            id SERIAL PRIMARY KEY,
+            key VARCHAR(50) NOT NULL UNIQUE,
+            value TEXT NOT NULL,
+            visible BOOLEAN,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `;
+
+    const configEntries = {
+        siteName: process.env.siteName,
+        primaryColor: process.env.primaryColor,
+        secondaryColor: process.env.secondaryColor,
+        textColor: process.env.textColor,
+        logoPNG: process.env.logoPNG,
+    };
+
+    for (const [key, value] of Object.entries(configEntries)) {
+        if (value !== undefined) {
+            await sql`
+                INSERT INTO config (key, value, visible)
+                VALUES (${key}, ${value}, true)
+                ON CONFLICT (key) DO NOTHING;
+            `;
+        }
+    }
+
+    console.log("Config table created or already exists:", configTable);
+
 }
 
 // Call the table creation function after connection is established
 createUserTable().catch((err) => {
     console.error("Error creating users table:", err);
+});
+
+createConfigTable().catch((err) => {
+    console.error("Error creating config table:", err);
 });
 
 export default sql;
