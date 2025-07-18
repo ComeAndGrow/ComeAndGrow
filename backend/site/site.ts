@@ -1,19 +1,15 @@
 import { api } from "encore.dev/api";
 import sql from "../database";
 
+interface Config {
+    key: string; value: string;
+}
 export const config = api({
     expose: true, path: "/config", method: "GET"
-}, async (): Promise<Record<string, string>> => {
+}, async (): Promise<{ values: Config[] }> => {
 
-    const rows = await sql`SELECT key, value FROM config WHERE visible = true` as { key: string, value: string }[];
+    const rows = await sql`SELECT key, value FROM config WHERE visible = true` as Config[];
 
-    // Turn the Rows into an Object
-    const configObj = {} as Record<string, string>;
-
-    for (const row of rows) {
-        configObj[row.key] = row.value;
-    }
-
-    return configObj;
+    return { values: rows };
 
 })
