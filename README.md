@@ -7,3 +7,9 @@ I have noticed that companies are willing to sell away their users for the sake 
 This platform is meant to be a mashup of Twitter-DeviantArt-Instagram-Reddit and eventually Discord but community-Driven rather than a whole product that can manage multiple communities at once.
 
 Good luck, to me.
+
+## Stuff I Will Use:
+- Encore.TS (Why Not?)
+- NextJS
+- Postgres
+- Redis
